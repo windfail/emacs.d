@@ -1,4 +1,8 @@
 ;;-----set by hand ------------
+
+(require-package 'smart-tabs-mode )
+(smart-tabs-insinuate 'c 'c++)
+
 (global-unset-key (kbd "C-SPC"))
 (global-set-key (kbd "M-SPC") 'set-mark-command)
 (global-set-key [C-tab] 'next-buffer)
