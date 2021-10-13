@@ -110,7 +110,7 @@
 ;;(require 'init-docker)
 ;;(require 'init-terraform)
 ;;(require 'init-nix)
-(maybe-require-package 'nginx-mode)
+;;(maybe-require-package 'nginx-mode)
 
 (require 'init-paredit)
 (require 'init-lisp)
@@ -169,6 +169,7 @@
 
 ;; Allow users to provide an optional "init-local" containing personal settings
 (require 'init-local nil t)
+(require 'init-griffon nil t)
 
 (provide 'init)
 
