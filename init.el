@@ -168,8 +168,8 @@
 (require 'init-locales)
 
 ;; Allow users to provide an optional "init-local" containing personal settings
-(require 'init-local nil t)
 (require 'init-griffon nil t)
+(require 'init-local nil t)
 
 (provide 'init)
 

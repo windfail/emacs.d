@@ -1,4 +1,6 @@
-;;-----set by hand ------------
+;;; griffon --- my emacs setups
+;;; Commentary:
+;;; Code:
 
 ;;(require-package 'smart-tabs-mode )
 ;;(smart-tabs-insinuate 'c 'c++)
@@ -6,7 +8,7 @@
 (evil-mode 1)
 ;;(setq evil-default-state 'emacs)
 (define-key evil-motion-state-map (kbd "SPC") 'evil-scroll-page-down)
-(define-key evil-normal-state-map (kbd "DEL") 'evil-scroll-page-up-char)
+(define-key evil-normal-state-map (kbd "DEL") 'evil-scroll-page-up)
 (require 'gtags)
 
 (global-unset-key (kbd "C-SPC"))
@@ -19,14 +21,22 @@
 (global-set-key [C-S-iso-lefttab] 'previous-buffer)
 ;;(setq scheme-program-name "mit-scheme")
 ;;(fset 'perl-mode 'cperl-mode)
-					;滚屏一次一行
+;;滚屏一次一行
 (setq scroll-conservatively 1)
+(tool-bar-mode 0)
+(setq inhibit-startup-screen t)
+(setq scroll-bar-mode "right")
+
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+
 (setq c-default-style
       '( (java-mode . "java") (awk-mode . "awk") (python . "python") (other . "linux")))
 
 ;; C/C++语言风格
 (defun wx-c-mode-hook()
-  (setq tab-width 4 )
+  "My C mode hook."
+  (setq tab-width 4 ); tab width
   (setq indent-tabs-mode nil)
                                         ;(c-set-style "stroustrup")
                                         ; 自动换行
@@ -47,26 +57,10 @@
   )
 (add-hook 'c-mode-hook 'wx-c-mode-hook)
 (add-hook 'c++-mode-hook 'wx-c-mode-hook)
-(tool-bar-mode 0)
-;;-------set by emacs -------
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(scroll-bar-mode (quote right)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gray85" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
 
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
 
 (defun lnv-package ()
+  "Get project base dir and package name."
   (rx-let ((pack_rx (: (+ (not "/"))
 		       (= 4 (+ (any "0-9")) ".")
 		       (+ (any "0-9"))
@@ -81,11 +75,22 @@
     ))
 
 (defun lnv-compile ()
+  "Compile command for lenovo bmc project."
   (interactive )
   (setq bmc-dir (lnv-package))
   (setq prjdir (car bmc-dir))
   (setq pkgname (nth 1 bmc-dir))
   (compile (format "lnv-build.sh %s %s" prjdir pkgname ) )
   )
+;;-------set by emacs -------
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gray85" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(flycheck-color-mode-line-error-face ((t (:inherit flycheck-fringe-error :background "dim gray"))))
+ '(flycheck-color-mode-line-info-face ((t (:inherit flycheck-fringe-info :background "dim gray")))))
 
 (provide 'init-griffon)
+;;; init-griffon.el ends here
