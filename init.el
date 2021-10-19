@@ -50,11 +50,11 @@
 (maybe-require-package 'scratch)
 (require-package 'command-log-mode)
 
-;;(require 'init-frame-hooks)
-;;(require 'init-xterm)
-;;(require 'init-themes)
+(require 'init-frame-hooks)
+(require 'init-xterm)
+(require 'init-themes)
 ;;(require 'init-osx-keys)
-;;(require 'init-gui-frames)
+(require 'init-gui-frames)
 (require 'init-dired)
 (require 'init-isearch)
 (require 'init-grep)
@@ -66,7 +66,7 @@
 (require 'init-minibuffer)
 (require 'init-hippie-expand)
 (require 'init-company)
-;;(require 'init-windows)
+(require 'init-windows)
 (require 'init-sessions)
 (require 'init-mmm)
 
@@ -167,8 +167,11 @@
 ;; Locales (setting them earlier in this file doesn't work in X)
 (require 'init-locales)
 
+;; add my init function
+(require 'init-evil)
+(require 'init-griffon)
+
 ;; Allow users to provide an optional "init-local" containing personal settings
-(require 'init-griffon nil t)
 (require 'init-local nil t)
 
 (provide 'init)
