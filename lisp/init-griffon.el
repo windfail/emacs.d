@@ -4,11 +4,6 @@
 
 ;;(require-package 'smart-tabs-mode )
 ;;(smart-tabs-insinuate 'c 'c++)
-(require-package 'evil )
-(evil-mode 1)
-;;(setq evil-default-state 'emacs)
-(define-key evil-motion-state-map (kbd "SPC") 'evil-scroll-page-down)
-(define-key evil-normal-state-map (kbd "DEL") 'evil-scroll-page-up)
 (require 'gtags)
 
 (global-unset-key (kbd "C-SPC"))
@@ -21,11 +16,11 @@
 (global-set-key [C-S-iso-lefttab] 'previous-buffer)
 ;;(setq scheme-program-name "mit-scheme")
 ;;(fset 'perl-mode 'cperl-mode)
+
 ;;滚屏一次一行
-(setq scroll-conservatively 1)
-(tool-bar-mode 0)
-(setq inhibit-startup-screen t)
-(setq scroll-bar-mode "right")
+(setq scroll-conservatively 3)
+;;(setq inhibit-startup-screen t)
+;;(setq scroll-bar-mode "right")
 
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
@@ -52,45 +47,42 @@
   ;;缩进风格
   (setq c-basic-offset 4)
   (setq comment-start "// ")
-  (setq comment-end "")
-
-  )
+  (setq comment-end ""))
 (add-hook 'c-mode-hook 'wx-c-mode-hook)
 (add-hook 'c++-mode-hook 'wx-c-mode-hook)
 
-
-(defun lnv-package ()
-  "Get project base dir and package name."
+(defun ami-mds-dir-parse ()
+  "Parse current dir, if is ami mds workspace, return list (basedir pkgname), otherwise return nil."
   (rx-let ((pack_rx (: (+ (not "/"))
 		       (= 4 (+ (any "0-9")) ".")
 		       (+ (any "0-9"))
 		       (+ (not "/"))))
 	   (total_rx (: (group (* nonl))
 			"/workspace/source/"
-			(group pack_rx)
-			(* nonl))) )
+			(group (* (not "/") ))
+                        "/data/"
+			(* nonl))))
     (setq dir (buffer-file-name))
-    (string-match (rx total_rx) dir)
-    (list (match-string 1 dir) (match-string 2 dir))
-    ))
-
+    (when dir
+      (when (string-match (rx total_rx) dir)
+        (list (match-string 1 dir) (match-string 2 dir))))))
 (defun lnv-compile ()
   "Compile command for lenovo bmc project."
   (interactive )
-  (setq bmc-dir (lnv-package))
+  (setq bmc-dir (ami-mds-dir-parse))
   (setq prjdir (car bmc-dir))
   (setq pkgname (nth 1 bmc-dir))
-  (compile (format "lnv-build.sh %s %s" prjdir pkgname ) )
-  )
-;;-------set by emacs -------
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gray85" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
- '(flycheck-color-mode-line-error-face ((t (:inherit flycheck-fringe-error :background "dim gray"))))
- '(flycheck-color-mode-line-info-face ((t (:inherit flycheck-fringe-info :background "dim gray")))))
+  (compile (format "lnv-build.sh %s %s" prjdir pkgname )))
 
+(defun ami-bmc-include ()
+  "Add bmc include dir."
+  (setq bmc-dir (ami-mds-dir-parse))
+  (when bmc-dir
+    (setq prjdir (car bmc-dir))
+    (setq pkgname (nth 1 bmc-dir))
+    (setq flycheck-gcc-include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
+    (setq flycheck-gcc-definitions (list "UN_USED(x)=(void)(x)"))))
+
+(add-hook 'flycheck-before-syntax-check-hook 'ami-bmc-include)
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
