@@ -80,8 +80,12 @@
   (when bmc-dir
     (setq prjdir (car bmc-dir))
     (setq pkgname (nth 1 bmc-dir))
-    (setq flycheck-gcc-include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
-    (setq flycheck-gcc-definitions (list "UN_USED(x)=(void)(x)"))))
+    (setq include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
+    (setq ami-defs (list "UN_USED(x)=(void)(x)"))
+    (setq flycheck-disabled-checkers '(c/c++-clang)) ;; disable clang for ami code
+    (setq flycheck-gcc-include-path include-path)
+    (setq flycheck-cppcheck-include-path include-path)
+    (setq flycheck-gcc-definitions ami-defs)))
 
 (add-hook 'flycheck-before-syntax-check-hook 'ami-bmc-include)
 (provide 'init-griffon)
