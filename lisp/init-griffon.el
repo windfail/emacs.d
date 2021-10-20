@@ -80,7 +80,17 @@
   (when bmc-dir
     (setq prjdir (car bmc-dir))
     (setq pkgname (nth 1 bmc-dir))
-    (setq include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
+    (setq makefile (format "%s/workspace/source/%s/data/Makefile" prjdir pkgname))
+    (setq include-path
+          (cons
+           (format "%s/workspace/tools/arm-linux/arm-none-linux-gnueabi/arm-none-linux-gnueabi/sysroot/usr/include" prjdir)
+           (process-lines
+            "sed" "-n"
+            "-e" (format "s|\\$[{(]SPXINC[})]|%s/workspace/Build/include|" prjdir) ;;replace $SPXINC
+            "-e" (format "s|\\$[{(]TARGETDIR[})]|%s/workspace/Build/target|" prjdir) ;;replace $TARGETDIR
+            "-e" "/^[ \t]*CFLAGS[ \t]*+=[ \t]*-I/s/.*CFLAGS[ \t]*+=[ \t]*-I\\([^# \t]*\\).*$/\\1/p" 
+            makefile)))
+    ;;    (setq include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
     (setq ami-defs (list "UN_USED(x)=(void)(x)"))
     (setq flycheck-disabled-checkers '(c/c++-clang)) ;; disable clang for ami code
     (setq flycheck-gcc-include-path include-path)
