@@ -58,21 +58,21 @@
 		       (+ (any "0-9"))
 		       (+ (not "/"))))
 	   (total_rx (: (group (* nonl))
-			"/workspace/source/"
+                        "/workspace/source/"
 			(group (* (not "/") ))
                         "/data/"
 			(* nonl))))
     (setq dir (buffer-file-name))
-    (when dir
-      (when (string-match (rx total_rx) dir)
-        (list (match-string 1 dir) (match-string 2 dir))))))
+    (when (and dir (string-match (rx total_rx) dir))
+      (list (match-string 1 dir) (match-string 2 dir)))))
 (defun lnv-compile ()
   "Compile command for lenovo bmc project."
   (interactive )
   (setq bmc-dir (ami-mds-dir-parse))
-  (setq prjdir (car bmc-dir))
-  (setq pkgname (nth 1 bmc-dir))
-  (compile (format "lnv-build.sh %s %s" prjdir pkgname )))
+  (when bmc-dir
+    (setq prjdir (car bmc-dir))
+    (setq pkgname (nth 1 bmc-dir))
+    (compile (format "bash -c \"cd %s; sudo project.py -b %s.spx --rebuild\""  prjdir pkgname ))))
 
 (defun ami-bmc-include ()
   "Add bmc include dir."
@@ -90,7 +90,6 @@
             "-e" (format "s|\\$[{(]TARGETDIR[})]|%s/workspace/Build/target|" prjdir) ;;replace $TARGETDIR
             "-e" "/^[ \t]*CFLAGS[ \t]*+=[ \t]*-I/s/.*CFLAGS[ \t]*+=[ \t]*-I\\([^# \t]*\\).*$/\\1/p" 
             makefile)))
-    ;;    (setq include-path (process-lines "/home/griffon/bin/get-bmc-include.sh" prjdir pkgname))
     (setq ami-defs (list "UN_USED(x)=(void)(x)"))
     (setq flycheck-disabled-checkers '(c/c++-clang)) ;; disable clang for ami code
     (setq flycheck-gcc-include-path include-path)
