@@ -52,8 +52,8 @@
 (add-hook 'c-mode-hook 'wx-c-mode-hook)
 (add-hook 'c++-mode-hook 'wx-c-mode-hook)
 
-(defun ami-mds-dir-parse ()
-  "Parse current dir, if is ami mds workspace, return list (basedir pkgname), otherwise return nil."
+(defun ami-mds-dir-parse (dir)
+  "Parse DIR, if is ami mds workspace, return list (basedir pkgname), otherwise return nil."
   (rx-let ((pack_rx (: (+ (not "/"))
 		       (= 4 (+ (any "0-9")) ".")
 		       (+ (any "0-9"))
@@ -63,17 +63,17 @@
 			(group (* (not "/") ))
                         "/data/"
 			(* nonl))))
-    (setq dir (buffer-file-name))
-    (when (and dir (string-match (rx total_rx) dir))
+    (when (string-match (rx total_rx) dir)
       (list (match-string 1 dir) (match-string 2 dir)))))
 (defun lnv-compile ()
   "Compile command for lenovo bmc project."
   (interactive )
-  (setq bmc-dir (ami-mds-dir-parse))
-  (when bmc-dir
-    (setq prjdir (car bmc-dir))
-    (setq pkgname (nth 1 bmc-dir))
-    (compile (format "bash -c \"cd %s; sudo project.py -b %s.spx --rebuild\""  prjdir pkgname ))))
+  (let ((bmc-dir (ami-mds-dir-parse (buffer-file-name))))
+    (when bmc-dir
+      (let ((prjdir (car bmc-dir))
+            (pkgname (nth 1 bmc-dir)))
+        (compile (format "bash -c \"cd %s; sudo project.py -b %s.spx --rebuild\""
+                         prjdir pkgname ))))))
 
 (defun ami-parse-makefile (builddir makefile)
   "This function parse  MAKEFILE, find includ dirs in CFLAGS -I lines, replace SPXINC/TARGDIR with correct dir using  BUILDDIR ."
@@ -81,39 +81,42 @@
                        (list "TARGETDIR"  (format "%s/target" builddir))
                        (list nil  "")))
         (inclist nil))
-    (with-temp-buffer
-      (insert-file-contents makefile)
-      (rx-let ((var_rx (: "$" (any "{(")
-                          (group-n 1 (+ (not (any "${()}"))))
-                          (any ")}")))
-               (cflag_rx (: line-start (* (any " \t")) "CFLAGS" (+ (any " \t+=")) "-I"
-                            (opt var_rx)
-                            (group-n 2 (+ (not (any " \t#\n${}")))))))
-        (while (re-search-forward (rx cflag_rx) nil t )
-          (setq idir (format "%s%s"
-                             (car (cdr (assoc (match-string 1) dirlist)))
-                             (match-string 2)))
-          (setq inclist (cons idir inclist)))))
+    (when (file-exists-p makefile)
+      (with-temp-buffer
+        (insert-file-contents makefile)
+        (rx-let ((var_rx (: "$" (any "{(")
+                            (group-n 1 (+ (not (any "${()}"))))
+                            (any ")}")))
+                 (cflag_rx (: line-start (* (any " \t")) "CFLAGS" (+ (any " \t+=")) "-I"
+                              (opt var_rx)
+                              (group-n 2 (+ (not (any " \t#\n${}")))))))
+          (while (re-search-forward (rx cflag_rx) nil t )
+            (let ((idir (format "%s%s"
+                                (car (cdr (assoc (match-string 1) dirlist)))
+                                (match-string 2))))
+              (setq inclist (cons idir inclist)))
+            ))))
     (nreverse inclist)))
 (defun ami-parse-prjdef (prjheader)
   "This function parse PRJHEADER, change the defines into list of gcc definitions for providing to flycheck."
   (let ((ami-defs nil))
-    (with-temp-buffer
-      (insert-file-contents prjheader)
-      (rx-let ((def_rx (: "define" (+ (any " \t"))
-                          (group (+ (not (any " \t"))))
-                          (+ (any " \t"))
-                          (group (+ nonl)))))
-        (while (re-search-forward (rx def_rx) nil t)
-          (setq ami-defs
-                (cons (format "%s=%s"
-                              (match-string 1)
-                              (match-string 2))
-                      ami-defs)))))
+    (when (file-exists-p prjheader)
+      (with-temp-buffer
+        (insert-file-contents prjheader)
+        (rx-let ((def_rx (: "define" (+ (any " \t"))
+                            (group (+ (not (any " \t"))))
+                            (+ (any " \t"))
+                            (group (+ nonl)))))
+          (while (re-search-forward (rx def_rx) nil t)
+            (setq ami-defs
+                  (cons (format "%s=%s"
+                                (match-string 1)
+                                (match-string 2))
+                        ami-defs))))))
     (nreverse ami-defs)))
 (defun ami-bmc-include ()
   "Add bmc include dir."
-  (let ((bmc-dir (ami-mds-dir-parse)))
+  (let ((bmc-dir (ami-mds-dir-parse (buffer-file-name))))
     (when bmc-dir
       (let* ((workdir (format "%s/workspace" (car bmc-dir)))
              (pkgname (nth 1 bmc-dir))
@@ -126,7 +129,7 @@
              (ami-defs (cons "UN_USED(x)=(void)(x)"
                              (ami-parse-prjdef prjheader)) )
              )
-        (setq flycheck-disabled-checkers '(c/c++-clang)) ;; disable clang for ami code
+        (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck)) ;; disable clang for ami code
         (setq flycheck-gcc-include-path include-path)
         (setq flycheck-cppcheck-include-path include-path)
         (setq flycheck-gcc-definitions ami-defs))
