@@ -47,7 +47,8 @@
   ;;缩进风格
   (setq c-basic-offset 4)
   (setq comment-start "// ")
-  (setq comment-end ""))
+  (setq comment-end "")
+  (c-set-offset 'inline-open 0))
 (add-hook 'c-mode-hook 'wx-c-mode-hook)
 (add-hook 'c++-mode-hook 'wx-c-mode-hook)
 
