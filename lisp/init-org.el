@@ -364,7 +364,10 @@ typical word processor."
    'org-babel-load-languages
    (seq-filter
     (lambda (pair)
-      ;; (featurep (intern (concat "ob-" (symbol-name (car pair)))))
+      ;; (let* ((lang (concat "ob-" (symbol-name (car pair))))
+      ;;        (res (featurep (intern lang))))
+      ;;   (message "%s:%s" lang (if res "yes" "no"))
+      ;;   res)
       t
       )
     '((R . t)
@@ -381,7 +384,7 @@ typical word processor."
       (python . t)
       (ruby . t)
       (screen . nil)
-      (sh . t) ;; obsolete
+      ;;  (sh . t) ;; obsolete
       (shell . t)
       (sql . t)
       (sqlite . t)))))
