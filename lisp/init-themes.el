@@ -53,11 +53,6 @@
       (not (display-graphic-p)))
     (add-to-list 'dimmer-exclusion-predicates 'sanityinc/display-non-graphic-p)))
 
-(let ((spec '((t (:family "mono" :height 120)))))
-  (mapc (lambda (face)
-          (face-spec-set face spec)
-          (put face 'face-defface-spec spec))
-        '(default menu)))
 
 (provide 'init-themes)
 ;;; init-themes.el ends here

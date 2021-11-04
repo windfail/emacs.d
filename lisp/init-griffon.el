@@ -136,5 +136,20 @@
       )))
 
 (add-hook 'flycheck-before-syntax-check-hook 'ami-bmc-include)
+
+(let ((spec '((t (:family "mono" :height 120)))))
+;; (let ((spec '((t (:family "DejaVu Sans Mono" :height 120)))))
+    ;; (let ((spec '((t (:family "DejaVu Sans Mono" :size 18)))))
+    (mapc (lambda (face)
+            (face-spec-set face spec)
+            (put face 'face-defface-spec spec)
+            ;;          (set-fontset-font (face-font face) 'unicode (font-spec :family "monospace" :height 140))
+            (dolist (charset '(kana han symbol cjk-misc bopomofo))
+              ;; (set-fontset-font (frame-parameter nil 'font) charset
+              (set-fontset-font (face-font face) charset
+                                (font-spec :family "Noto Sans Mono CJK SC"))))
+          '(default menu)))
+
+;;(setq face-font-rescale-alist '(("微软雅黑" . 1.4) ("Microsoft Yahei" . 1.4) ("WenQuanYi Zen Hei" . 1.4)))
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
