@@ -29,28 +29,18 @@
       '( (java-mode . "java") (awk-mode . "awk") (python . "python") (other . "linux")))
 
 ;; C/C++语言风格
-(defun wx-c-mode-hook()
+(defun my-c-mode-hook()
   "My C mode hook."
   (setq tab-width 4 ); tab width
   (setq indent-tabs-mode nil)
-                                        ;(c-set-style "stroustrup")
-                                        ; 自动换行
   (c-toggle-auto-newline 1)
-                                        ; 贪心删除
-                                        ;  (c-toggle-hungry-state 1)
-                                        ; ctrl+`: 代码折叠
-                                        ;(define-key c-mode-base-map [(control \`)] 'hs-toggle-hiding)
-                                        ; 换行自动递进
-                                        ;(define-key c-mode-base-map [(return)] 'newline-and-indent)
-                                        ; F7:编译
-  ;;  (define-key c-mode-base-map [f7] 'compile)
   ;;缩进风格
   (setq c-basic-offset 4)
   (setq comment-start "// ")
   (setq comment-end "")
   (c-set-offset 'inline-open 0))
-(add-hook 'c-mode-hook 'wx-c-mode-hook)
-(add-hook 'c++-mode-hook 'wx-c-mode-hook)
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c++-mode-hook 'my-c-mode-hook)
 
 (defun ami-mds-dir-parse (dir)
   "Parse DIR, if is ami mds workspace, return list (basedir pkgname), otherwise return nil."
@@ -137,19 +127,27 @@
 
 (add-hook 'flycheck-before-syntax-check-hook 'ami-bmc-include)
 
-(let ((spec '((t (:family "mono" :height 120)))))
-;; (let ((spec '((t (:family "DejaVu Sans Mono" :height 120)))))
-    ;; (let ((spec '((t (:family "DejaVu Sans Mono" :size 18)))))
-    (mapc (lambda (face)
-            (face-spec-set face spec)
-            (put face 'face-defface-spec spec)
-            ;;          (set-fontset-font (face-font face) 'unicode (font-spec :family "monospace" :height 140))
-            (dolist (charset '(kana han symbol cjk-misc bopomofo))
-              ;; (set-fontset-font (frame-parameter nil 'font) charset
-              (set-fontset-font (face-font face) charset
-                                (font-spec :family "Noto Sans Mono CJK SC"))))
-          '(default menu)))
+;; (let ((spec '((t (:family "mono" :height 120)))))
+;; ;; (let ((spec '((t (:family "DejaVu Sans Mono" :height 120)))))
+;;     ;; (let ((spec '((t (:family "DejaVu Sans Mono" :size 18)))))
+;;     (mapc (lambda (face)
+;;             (face-spec-set face spec)
+;;             (put face 'face-defface-spec spec)
+;;             ;;          (set-fontset-font (face-font face) 'unicode (font-spec :family "monospace" :height 140))
+;;             (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;;               ;; (set-fontset-font (frame-parameter nil 'font) charset
+;;               (set-fontset-font (face-font face) charset
+;;                                 (font-spec :family "Noto Sans Mono CJK SC"))))
+;;           '(default menu)))
 
-;;(setq face-font-rescale-alist '(("微软雅黑" . 1.4) ("Microsoft Yahei" . 1.4) ("WenQuanYi Zen Hei" . 1.4)))
+;; create new fontset-mono
+(create-fontset-from-fontset-spec "-*-DejaVu Sans Mono-normal-normal-normal-*-15-*-*-*-*-*-fontset-mono" )
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font "fontset-mono" charset
+                    (font-spec :family "Noto Sans Mono CJK SC")))
+;; set default font for emacsclient.
+(add-to-list 'default-frame-alist
+             '(fullscreen . maximized)
+             '(font . "fontset-mono"))
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
