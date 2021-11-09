@@ -45,14 +45,14 @@
 (defun ami-mds-dir-parse (dir)
   "Parse DIR, if is ami mds workspace, return list (basedir pkgname), otherwise return nil."
   (rx-let ((pack_rx (: (+ (not "/"))
-		       (= 4 (+ (any "0-9")) ".")
-		       (+ (any "0-9"))
-		       (+ (not "/"))))
-	   (total_rx (: (group (* nonl))
+                       (= 4 (+ (any "0-9")) ".")
+                       (+ (any "0-9"))
+                       (+ (not "/"))))
+           (total_rx (: (group (* nonl))
                         "/workspace/source/"
-			(group (* (not "/") ))
+                        (group (* (not "/") ))
                         "/data/"
-			(* nonl))))
+                        (* nonl))))
     (when (string-match (rx total_rx) dir)
       (list (match-string 1 dir) (match-string 2 dir)))))
 (defun lnv-compile ()
@@ -146,8 +146,8 @@
   (set-fontset-font "fontset-mono" charset
                     (font-spec :family "Noto Sans Mono CJK SC")))
 ;; set default font for emacsclient.
-(add-to-list 'default-frame-alist
-             '(fullscreen . maximized)
-             '(font . "fontset-mono"))
+(add-to-list 'default-frame-alist '(font . "fontset-mono"))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
