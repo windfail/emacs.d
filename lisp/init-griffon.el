@@ -57,7 +57,7 @@
 ;;           '(default menu)))
 
 ;; create new fontset-mono
-(create-fontset-from-fontset-spec "-*-DejaVu Sans Mono-normal-normal-normal-*-15-*-*-*-*-*-fontset-mono" )
+(create-fontset-from-fontset-spec "-*-DejaVu Sans Mono-normal-normal-normal-*-18-*-*-*-*-*-fontset-mono" )
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font "fontset-mono" charset
                     (font-spec :family "Noto Sans Mono CJK SC")))
