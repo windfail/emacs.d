@@ -134,7 +134,7 @@
 
 (require-package 'sudo-edit)
 ;;(require-package 'gnuplot)
-;;(require-package 'lua-mode)
+(require-package 'lua-mode)
 ;;(require-package 'htmlize)
 (when *is-a-mac*
   (require-package 'osx-location))

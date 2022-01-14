@@ -31,6 +31,8 @@
 (define-key evil-insert-state-map (kbd "C-a") nil)
 (define-key evil-insert-state-map (kbd "C-e") nil)
 (define-key evil-insert-state-map (kbd "C-k") nil)
+(define-key evil-motion-state-map (kbd "C-d") nil)
+(define-key evil-insert-state-map (kbd "C-d") nil)
 
 (provide 'init-evil)
 ;;; init-evil.el ends here

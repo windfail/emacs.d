@@ -114,8 +114,10 @@
              (builddir (format "%s/Build" workdir))
              (prjheader (format "%s/include/projdef.h" builddir))
              (sysinc (format "%s/tools/arm-linux/arm-none-linux-gnueabi/arm-none-linux-gnueabi/sysroot/usr/include" workdir))
-             (include-path (cons sysinc
-                                 (ami-parse-makefile builddir makefile)))
+             (include-path (cons
+                            (format "%s/tools/arm-soft-linux-gnueabi/arm-soft-linux-gnueabi/sysroot/usr/include" workdir)
+                            (cons sysinc
+                                  (ami-parse-makefile builddir makefile))) )
              (ami-defs (cons "UN_USED(x)=(void)(x)"
                              (ami-parse-prjdef prjheader)) )
              )
@@ -144,7 +146,7 @@
 (create-fontset-from-fontset-spec "-*-DejaVu Sans Mono-normal-normal-normal-*-15-*-*-*-*-*-fontset-mono" )
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font "fontset-mono" charset
-                    (font-spec :family "Noto Sans Mono CJK SC")))
+                    (font-spec :family "Noto Sans Mono CJK SC" )))
 ;; set default font for emacsclient.
 (add-to-list 'default-frame-alist '(font . "fontset-mono"))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
