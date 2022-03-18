@@ -65,14 +65,15 @@
         (compile (format "bash -c \"cd %s; sudo project.py -b %s.spx --rebuild\""
                          prjdir pkgname ))))))
 
-(defun ami-parse-makefile (builddir makefile)
-  "This function parse  MAKEFILE, find includ dirs in CFLAGS -I lines, replace SPXINC/TARGDIR with correct dir using  BUILDDIR ."
+(defun ami-parse-makefile (builddir pkgdir)
+  "This function parse makefile in PKGDIR, find includ dirs in CFLAGS -I lines, replace SPXINC/TARGDIR with correct dir using  BUILDDIR ."
   (let ((dirlist (list (list "SPXINC"  (format "%s/include" builddir))
                        (list "TARGETDIR"  (format "%s/target" builddir))
                        (list nil  "")))
+        (makefile (format "%s/data/Makefile" pkgdir))
         (deflist nil)
         (wflaglist nil)
-        (inclist nil)
+        (inclist (list (format "%s/data" pkgdir)) )
         (gccstd nil)
         )
     (when (file-exists-p makefile)
@@ -93,22 +94,41 @@
                  (cxxflag_rx (: line-start (* (any " \t")) "CXXFLAGS" (+ (any " \t+="))
                                 (: "-std="
                                    (group-n 5 (+ (not (any " \t#\n${}")))))))
+                 (inc_rx (: line-start (* (any " \t")) "include" (+ (any " \t+="))
+                            (group-n 6 (+ (not (any " \t#\n${}"))))
+                            (* nonl)
+                            "\n"
+                            ))
                  (opts (or cflag_rx
-                           cxxflag_rx))
+                           cxxflag_rx
+                           inc_rx
+                           ))
                  )
           (while (re-search-forward (rx opts) nil t )
-            (cond ((match-string 2)
-                   (let ((idir (format "%s%s"
-                                       (nth 1 (assoc (match-string 1) dirlist))
-                                       (match-string 2))))
-                     (setq inclist (cons idir inclist))))
-                  ((match-string 3)
-                   (setq deflist (cons (match-string 3) deflist)))
-                  ((match-string 4)
-                   (setq wflaglist (cons (match-string 4) wflaglist)))
-                  ((match-string 5)
-                   (setq gccstd (match-string 5)))
+            (let ((m_var (match-string 1))
+                  (m_incdir (match-string 2))
+                  (m_def (match-string 3))
+                  (m_war (match-string 4))
+                  (m_std (match-string 5))
+                  (m_incf (match-string 6))
                   )
+              (cond (m_incdir
+                     (let ((idir (format "%s%s"
+                                         (nth 1 (assoc m_var dirlist))
+                                         m_incdir)))
+                       (setq inclist (cons idir inclist))))
+                    (m_def
+                     (setq deflist (cons m_def deflist)))
+                    (m_war
+                     (setq wflaglist (cons m_war wflaglist)))
+                    (m_std
+                     (setq gccstd m_std))
+                    (m_incf
+                     (insert-file-contents (format "%s/data/%s" pkgdir m_incf))
+                     ;;(print (buffer-string))
+                     )
+                    )
+              )
             ))))
     ;;(print inclist)
     ;;(print deflist)
@@ -138,10 +158,10 @@
     (when bmc-dir
       (let* ((workdir (format "%s/workspace" (car bmc-dir)))
              (pkgname (nth 1 bmc-dir))
-             (makefile (format "%s/source/%s/data/Makefile" workdir pkgname))
+             (pkgdir (format "%s/source/%s" workdir pkgname))
              (builddir (format "%s/Build" workdir))
              (prjheader (format "%s/include/projdef.h" builddir))
-             (pkgvar (ami-parse-makefile builddir makefile))
+             (pkgvar (ami-parse-makefile builddir pkgdir))
              (gnuabir13 (format "%s/tools/arm-soft-linux-gnueabi" workdir))
              (gnuabir12 (format "%s/tools/arm-linux/arm-none-linux-gnueabi" workdir))
              (prjvar
