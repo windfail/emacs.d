@@ -15,9 +15,7 @@
 ;;(global-set-key [f6] 'speedbar)
 (global-set-key [C-S-iso-lefttab] 'previous-buffer)
 ;;(setq scheme-program-name "mit-scheme")
-;;(fset 'perl-mode 'cperl-mode)
-
-;;滚屏一次一行
+;;(fset 'perl-mode 'cper
 (setq scroll-conservatively 3)
 ;;(setq inhibit-startup-screen t)
 ;;(setq scroll-bar-mode "right")
@@ -32,7 +30,7 @@
 (defun my-c-mode-hook()
   "My C mode hook."
   (setq tab-width 4 ); tab width
-  (setq indent-tabs-mode nil)
+  (setq indent-tabs-mode t)
   (c-toggle-auto-newline 1)
   ;;缩进风格
   (setq c-basic-offset 4)
@@ -62,9 +60,22 @@
   (set-fontset-font "fontset-mono" charset
                     (font-spec :family "Noto Sans Mono CJK SC")))
 ;; set default font for emacsclient.
-(add-to-list 'default-frame-alist
-             '(font . "fontset-mono"))
-(add-to-list 'default-frame-alist
-             '(fullscreen . maximized))
+(setq default-frame-alist
+      (append default-frame-alist
+              '((font . "fontset-mono")
+                (fullscreen . maximized)
+                (cursor-color . "indian red") ; for emacsclient cursor color
+                )))
+(blink-cursor-mode 1) ; for emacsclient not blink in default
+
+(add-hook 'flycheck-before-syntax-check-hook
+          (lambda ()
+            (setq flycheck-gcc-args '("-std=c++17"))
+            (setq flycheck-clang-args '("-std=c++17"))
+            ;; (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck))
+            ))
+(setq desktop-save t)
+(setq desktop-dirname "/home/griffon/.emacs.d/")
+(setq desktop-base-file-name ".emacs.desktop")
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
