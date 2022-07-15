@@ -4,7 +4,7 @@
 
 (require-package 'smart-tabs-mode )
 (smart-tabs-insinuate 'c 'c++)
-(require 'gtags)
+;;(require-package 'gtags)
 
 (global-unset-key (kbd "C-SPC"))
 (global-set-key (kbd "M-SPC") 'set-mark-command)
@@ -74,8 +74,8 @@
             (setq flycheck-clang-args '("-std=c++17"))
             ;; (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck))
             ))
-(setq desktop-save t)
-(setq desktop-dirname "/home/griffon/.emacs.d/")
-(setq desktop-base-file-name ".emacs.desktop")
+;; (setq desktop-save t)
+;; (setq desktop-dirname "/home/griffon/.emacs.d/")
+;; (setq desktop-base-file-name ".emacs.desktop")
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
