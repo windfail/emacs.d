@@ -32,7 +32,7 @@
 (defun my-c-mode-hook()
   "My C mode hook."
   (setq tab-width 4 ); tab width
-  (setq indent-tabs-mode nil)
+  (setq indent-tabs-mode t)
   (c-toggle-auto-newline 1)
   ;;缩进风格
   (setq c-basic-offset 4)
@@ -197,7 +197,7 @@
           (setq flycheck-cppcheck-include-path include-path)
           (setq flycheck-gcc-definitions ami-defs)
           (setq flycheck-gcc-language-standard (nth 3 pkgvar) )
-          (setq flycheck-gcc-warnings ( nth 2 pkgvar)  )
+          (setq flycheck-gcc-warnings (cons "sign-compare" ( nth 2 pkgvar))   )
           )
       ;; no ami project found, reset to default
       (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck)) ;; disable clang for ami code
@@ -207,7 +207,7 @@
       (setq flycheck-cppcheck-include-path nil)
       (setq flycheck-gcc-definitions nil)
       (setq flycheck-gcc-language-standard "c++17" )
-      (setq flycheck-gcc-warnings (list "all" "extra")  )
+      (setq flycheck-gcc-warnings (list "all" "extra" "sign-compare")  )
       )))
 
 (add-hook 'flycheck-before-syntax-check-hook 'ami-bmc-include)

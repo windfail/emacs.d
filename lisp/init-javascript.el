@@ -16,7 +16,7 @@
   (sanityinc/major-mode-lighter 'js-mode "JS")
   (sanityinc/major-mode-lighter 'js-jsx-mode "JSX"))
 
-(setq-default js-indent-level 2)
+(setq-default js-indent-level 4)
 
 
 
