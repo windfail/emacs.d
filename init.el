@@ -9,10 +9,10 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;;(setq debug-on-error t)
 
-(let ((minver "25.1"))
+(let ((minver "26.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "26.1")
+(when (version< emacs-version "27.1")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -66,7 +66,7 @@
 (require 'init-recentf)
 (require 'init-minibuffer)
 (require 'init-hippie-expand)
-(require 'init-company)
+(require 'init-corfu)
 (require 'init-windows)
 (require 'init-sessions)
 (require 'init-mmm)
@@ -128,14 +128,13 @@
 (require 'init-folding)
 (require 'init-dash)
 
-;;(require 'init-twitter)
-;; (require 'init-mu)
 (require 'init-ledger)
+(require 'init-lua)
+
 ;; Extra packages which don't require any configuration
 
 (require-package 'sudo-edit)
 ;;(require-package 'gnuplot)
-;;(require-package 'lua-mode)
 ;;(require-package 'htmlize)
 (when *is-a-mac*
   (require-package 'osx-location))
@@ -150,6 +149,11 @@
   (add-hook 'after-init-hook 'global-eldoc-mode))
 
 (require 'init-direnv)
+
+(when (and (require 'treesit nil t)
+           (fboundp 'treesit-available-p)
+           (treesit-available-p))
+  (require 'init-treesitter))
 
 
 

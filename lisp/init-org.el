@@ -364,12 +364,7 @@ typical word processor."
    'org-babel-load-languages
    (seq-filter
     (lambda (pair)
-      ;; (let* ((lang (concat "ob-" (symbol-name (car pair))))
-      ;;        (res (featurep (intern lang))))
-      ;;   (message "%s:%s" lang (if res "yes" "no"))
-      ;;   res)
-      t
-      )
+      (locate-library (concat "ob-" (symbol-name (car pair)))))
     '((R . t)
       (ditaa . t)
       (dot . t)
