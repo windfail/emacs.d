@@ -4,7 +4,7 @@
 
 (require-package 'smart-tabs-mode )
 (smart-tabs-insinuate 'c 'c++)
-;;(require-package 'gtags)
+(require 'gtags)
 
 (global-unset-key (kbd "C-SPC"))
 (global-set-key (kbd "M-SPC") 'set-mark-command)

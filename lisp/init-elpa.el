@@ -16,9 +16,12 @@
 ;;; Standard package repositories
 
 ;;(add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '( "melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+;;(add-to-list 'package-archives '( "melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
 ;; Official MELPA Mirror, in case necessary.
 ;;(add-to-list 'package-archives (cons "melpa-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
+(setq package-archives '(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+                         ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
 
 
