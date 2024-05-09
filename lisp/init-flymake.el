@@ -11,7 +11,10 @@
     (setq-default
      flycheck-disabled-checkers
      (append (default-value 'flycheck-disabled-checkers)
-             '(emacs-lisp emacs-lisp-checkdoc emacs-lisp-package sh-shellcheck))))
+             '(c/c++-clang emacs-lisp emacs-lisp-checkdoc emacs-lisp-package sh-shellcheck)))
+    (setq flycheck-gcc-args '("-std=c++23"))
+    ;; (setq flycheck-clang-args '("-std=c++20"))
+    )
 
   (add-hook 'flymake-mode-hook 'flymake-flycheck-auto)
   (add-hook 'prog-mode-hook 'flymake-mode)
