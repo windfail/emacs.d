@@ -2,9 +2,18 @@
 ;;; Commentary:
 ;;; Code:
 
-(require-package 'smart-tabs-mode )
-(smart-tabs-insinuate 'c 'c++)
-(require 'gtags)
+;; (require-package 'smart-tabs-mode )
+;; (smart-tabs-insinuate 'c 'c++)
+(setq auto-insert-directory "~/.emacs.d/insert/")
+(auto-insert-mode t)
+(setq auto-insert-query nil)
+(setq auto-insert-alist
+      '((("\\.\\([Hh]\\|hh\\|hpp\\|hxx\\|h\\+\\+\\)\\'" . "C / C++ header") .
+         ["header" "yily_license"] )
+        (("\\.\\([Cc]\\|cc\\|cpp\\|cxx\\|c\\+\\+\\)\\'" . "C / C++ program") .
+         "yily_license")
+        ))
+
 
 (global-unset-key (kbd "C-SPC"))
 (global-set-key (kbd "M-SPC") 'set-mark-command)
@@ -68,14 +77,17 @@
                 )))
 (blink-cursor-mode 1) ; for emacsclient not blink in default
 
-(add-hook 'flycheck-before-syntax-check-hook
-          (lambda ()
-            (setq flycheck-gcc-args '("-std=c++17"))
-            (setq flycheck-clang-args '("-std=c++17"))
-            ;; (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck))
-            ))
+;; (add-hook 'flycheck-before-syntax-check-hook
+;;           (lambda ()
+;;             (setq flycheck-gcc-args '("-std=c++20"))
+;;             (setq flycheck-clang-args '("-std=c++20"))
+;;             ;; (setq flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck))
+;;             ))
 ;; (setq desktop-save t)
 ;; (setq desktop-dirname "/home/griffon/.emacs.d/")
 ;; (setq desktop-base-file-name ".emacs.desktop")
+
+(require-package 'clang-format)
+(require 'gtags)
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
