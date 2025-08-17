@@ -17,7 +17,7 @@
 
 ;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-unsigned-archives "melpa")
->>>>>>> upstream/master
+
 ;; Official MELPA Mirror, in case necessary.
 ;;(add-to-list 'package-archives (cons "melpa-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
 (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
