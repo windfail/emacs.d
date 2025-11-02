@@ -4,6 +4,7 @@
 
 ;; (require-package 'smart-tabs-mode )
 ;; (smart-tabs-insinuate 'c 'c++)
+(require-package 'clang-format)
 (setq auto-insert-directory "~/.emacs.d/insert/")
 (auto-insert-mode t)
 (setq auto-insert-query nil)
@@ -45,7 +46,8 @@
   (setq c-basic-offset 4)
   (setq comment-start "// ")
   (setq comment-end "")
-  (c-set-offset 'inline-open 0))
+  (c-set-offset 'inline-open 0)
+  (local-set-key (kbd "TAB") #'clang-format-region))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-hook 'my-c-mode-hook)
 
@@ -87,7 +89,6 @@
 ;; (setq desktop-dirname "/home/griffon/.emacs.d/")
 ;; (setq desktop-base-file-name ".emacs.desktop")
 
-(require-package 'clang-format)
 (require 'gtags)
 (provide 'init-griffon)
 ;;; init-griffon.el ends here
