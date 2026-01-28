@@ -20,10 +20,39 @@
 
 ;; Official MELPA Mirror, in case necessary.
 ;;(add-to-list 'package-archives (cons "melpa-mirror" "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
-(setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-                         ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+;; (setq package-archives '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+;;                          ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+;;                          ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 
+;; 设置包源
+(setq package-archives
+      '(("tuna-melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("tuna-gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
+        ("tuna-nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+;; 设置包源优先级
+(setq package-archive-priorities
+      '(("tuna-melpa" . 10)
+        ("tuna-gnu" . 10)
+        ("tuna-nongnu" . 10)
+        ("melpa" . 5)
+        ("gnu" . 5)
+        ("nongnu" . 5)))
+
+;; 网络设置
+(setq network-security-level 'low)
+(setq url-retrieve-timeout 30)
+(setq url-retry-attempts 3)
+
+;; 初始化包系统
+;; (package-initialize)
+
+;; 刷新包内容
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 ;; Allow built-in packages to be upgraded
 (setq package-install-upgrade-built-in t)
 

@@ -89,6 +89,6 @@
 ;; (setq desktop-dirname "/home/griffon/.emacs.d/")
 ;; (setq desktop-base-file-name ".emacs.desktop")
 
-(require 'gtags)
+;; (require 'gtags)
 (provide 'init-griffon)
 ;;; init-griffon.el ends here

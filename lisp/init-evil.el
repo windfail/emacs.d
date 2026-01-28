@@ -22,7 +22,7 @@
 (define-key evil-normal-state-map (kbd "C-p") nil)
 (define-key evil-motion-state-map "\C-v" nil)
 (define-key evil-insert-state-map (kbd "C-v") nil)
-(define-key evil-insert-state-map (kbd "A-v") 'evil-scrool-page-up)
+(define-key evil-insert-state-map (kbd "M-v") 'evil-scrool-page-up)
 (define-key evil-insert-state-map (kbd "C-n") nil)
 (define-key evil-insert-state-map (kbd "C-p") nil)
 (define-key evil-insert-state-map (kbd "C-r") nil)
@@ -35,6 +35,8 @@
 (define-key evil-insert-state-map (kbd "C-d") nil)
 (define-key evil-insert-state-map (kbd "C-y") nil)
 (define-key evil-insert-state-map (kbd "C-w") nil)
+(define-key evil-insert-state-map (kbd "M-r") nil)
+(define-key evil-normal-state-map (kbd "M-.") nil)
 
 (provide 'init-evil)
 ;;; init-evil.el ends here

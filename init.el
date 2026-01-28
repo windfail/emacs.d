@@ -193,6 +193,7 @@
 
 ;; add my init function
 (require 'init-evil)
+(require 'init-lsp)
 (require 'init-griffon)
 
 ;; Allow users to provide an optional "init-local" containing personal settings
